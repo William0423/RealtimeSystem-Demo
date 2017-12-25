@@ -1,0 +1,152 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.lin.demo</groupId>
+  <artifactId>RealtimeSystem-Demo</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>Kafka-Demo</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+ <dependencies>
+	<dependency>
+	    <groupId>org.fusesource.leveldbjni</groupId>
+	    <artifactId>leveldbjni-all</artifactId>
+	    <version>1.7</version>
+	</dependency>
+ 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+   	<dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.11</artifactId>
+      <version>2.2.1</version>
+<!--       <scope>provided</scope> -->
+    </dependency>
+    
+	<dependency>
+	    <groupId>org.apache.spark</groupId>
+	    <artifactId>spark-streaming_2.11</artifactId>
+	    <version>2.2.0</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.apache.spark</groupId>
+	    <artifactId>spark-sql_2.11</artifactId>
+	    <version>2.2.0</version>
+	</dependency>
+<!-- 	<dependency>
+	    <groupId>org.apache.hbase</groupId>
+	    <artifactId>hbase</artifactId>
+	    <version>1.2.6</version>
+	    <type>pom</type>
+	</dependency> -->
+	
+	<!-- Hbase的版本和部署的版本相同 -->
+	<dependency>
+	    <groupId>org.apache.hbase</groupId>
+	    <artifactId>hbase-client</artifactId>
+	    <version>1.2.6</version>
+	</dependency>
+	
+	<dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-common</artifactId>
+      <version>1.2.6</version>
+    </dependency>
+    <!-- 发起连接需要的java包 -->
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-protocol</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+
+	<!-- hadoop -->
+	<dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+
+	<dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+
+<!-- 	<dependency>
+	    <groupId>org.apache.hbase</groupId>
+	    <artifactId>hbase-server</artifactId>
+	    <version>1.2.6</version>
+	</dependency> -->
+
+	
+<!--     <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql-kafka-0-10_${scala.binary.version}</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency> -->
+    
+<!-- 	<dependency>
+	    <groupId>org.apache.spark</groupId>
+	    <artifactId>spark-sql-kafka-0-10_2.11</artifactId>
+	    <version>2.1.0</version>
+	</dependency> -->
+	
+<!-- 	<dependency>
+	    <groupId>org.apache.spark</groupId>
+	    <artifactId>spark-sql-kafka-0-10_2.11</artifactId>
+	    <version>2.1.0</version>
+	</dependency> -->
+    
+	
+	
+<!--     <dependency>  
+        <groupId>org.slf4j</groupId>  
+        <artifactId>slf4j-log4j12</artifactId>  
+        <version>1.7.8</version>  
+    </dependency>  -->
+	
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-streaming-kafka-0-8_2.11</artifactId>
+		<version>2.2.0</version>
+  		<scope>compile</scope>
+		<exclusions>
+			<exclusion>
+			<artifactId>jmxri</artifactId>
+			<groupId>com.sun.jmx</groupId>
+			</exclusion>
+			<exclusion>
+			<artifactId>jmxtools</artifactId>
+			<groupId>com.sun.jdmk</groupId>
+			</exclusion>
+			<exclusion>
+			<artifactId>jopt-simple</artifactId>
+			<groupId>net.sf.jopt-simple</groupId>
+			</exclusion>
+			<exclusion>
+			<artifactId>slf4j-simple</artifactId>
+			<groupId>org.slf4j</groupId>
+			</exclusion>
+			<exclusion>
+			<artifactId>zookeeper</artifactId>
+			<groupId>org.apache.zookeeper</groupId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+   
+  </dependencies>
+</project>
