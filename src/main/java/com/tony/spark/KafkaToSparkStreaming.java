@@ -51,11 +51,11 @@ public class KafkaToSparkStreaming {
 	        JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
 
 	        Map<String, String> kafkaParams = new HashMap<String, String>();
-	        kafkaParams.put("zookeeper.connect", "localhost:2181"); //Make all kafka data for this cluster appear under a particular path. 
-//	        kafkaParams.put("zookeeper.connect", "192.168.81.87:2181"); //Make all kafka data for this cluster appear under a particular path. 
+//	        kafkaParams.put("zookeeper.connect", "localhost:2181"); //Make all kafka data for this cluster appear under a particular path. 
+	        kafkaParams.put("zookeeper.connect", "192.168.81.87:2181"); //Make all kafka data for this cluster appear under a particular path. 
 	        kafkaParams.put("group.id", "linlin-group");   //String that uniquely identifies the group of consumer processes to which this consumer belongs
-	        kafkaParams.put("metadata.broker.list", "192.168.81.87:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
-//	        kafkaParams.put("metadata.broker.list", "localhost:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
+//	        kafkaParams.put("metadata.broker.list", "192.168.81.87:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
+	        kafkaParams.put("metadata.broker.list", "localhost:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
 	        kafkaParams.put("serializer.class", "kafka.serializer.StringEncoder"); //Serializer to use when preparing the message for transmission to the Broker.
 	        kafkaParams.put("request.required.acks", "1");  //Producer to require an acknowledgement from the Broker that the message was received.
 
