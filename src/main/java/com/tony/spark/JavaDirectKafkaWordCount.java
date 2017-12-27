@@ -15,6 +15,8 @@ import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 
+import com.tony.kafka.producer.KafkaProducer;
+
 import kafka.serializer.StringDecoder;
 import scala.Tuple2;
 
@@ -40,7 +42,7 @@ public class JavaDirectKafkaWordCount {
 //		String topics = args[1];
 		
 		String brokers = "127.0.0.1:9092";
-		String topics = "linlin";
+		String topics = KafkaProducer.TOPIC_NAME;
 		
 		SparkConf sparkConf = new SparkConf().setAppName("JavaDirectKafkaWordCount").setMaster("local[*]");
 		
@@ -71,7 +73,6 @@ public class JavaDirectKafkaWordCount {
 	    JavaDStream<String> words = lines.flatMap(x -> Arrays.asList(SPACE.split(x)).iterator());
 	    JavaPairDStream<String, Integer> wordCounts = words.mapToPair(s -> new Tuple2<>(s,1)).reduceByKey((i1,i2) -> i1+i2);
 	    wordCounts.print();
-	    System.out.println("##################");
 	    // Start the computation
 	    jssc.start();
 	    try {

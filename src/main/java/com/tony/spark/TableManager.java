@@ -3,17 +3,17 @@ package com.tony.spark;
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
@@ -23,9 +23,10 @@ import org.apache.hadoop.hbase.io.compress.Compression.Algorithm;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class TableManager {
-
-	  private static final String TABLE_NAME = "MY_TABLE_NAME_TOO";
-	  private static final String CF_DEFAULT = "DEFAULT_COLUMN_FAMILY";
+	  // 表名
+	  private static final String TABLE_NAME = "bd_table";
+	  // cf名
+	  private static final String CF_DEFAULT = "portid";
 
 	  public static void createSchemaTables(Configuration config) throws IOException {
 		    try (Connection connection = ConnectionFactory.createConnection(config);
@@ -56,21 +57,14 @@ public class TableManager {
 	    }
 	    admin.createTable(table);
 	    
+	    // 列出hbase现有的所有表
 	    HTableDescriptor[] tableDescriptor = admin.listTables();
 	    for(int i=0;i<tableDescriptor.length;i++) {
 	    	System.out.println(tableDescriptor[i].getNameAsString());
 	    }
-//	    Scan scan = new Scan();
-//        ResultScanner scanner = tablet.getScanner(scan);
-//		for (Result scannerResult : scanner) {
-//		    System.out.println("Scan: " + scannerResult);
-//		}
+	    
 	  }
-	  
-//	  public static void findSchemaTables(Admin admin) throws IOException {
-//		  HTableDescriptor[] tables = admin.listTables();
-//		  if (tables.length != 1&& )
-//	  }
+	 
 	  
 	  public static void scanSchema(Configuration config) throws IOException {
 		  Connection connection = ConnectionFactory.createConnection(config);
@@ -141,18 +135,6 @@ public class TableManager {
 		  table.close();
 	  }
 	  
-	public static void getData(Configuration config) throws IOException {
-		Connection connection = ConnectionFactory.createConnection(config);
-		TableName tablename = TableName.valueOf("member");
-		Table table = connection.getTable(tablename);
-
-		Get get = new Get(Bytes.toBytes("debugo"));
-		Result result = table.get(get);
-		String str = Bytes.toString(result.getValue(Bytes.toBytes("info"), Bytes.toBytes("age")));
-		System.out.println(str);
-		table.close();
-	}
-	
 	public static void deleteData(Configuration config) throws IOException {
 		Connection connection = ConnectionFactory.createConnection(config);
 		TableName tablename = TableName.valueOf("member");
@@ -163,29 +145,60 @@ public class TableManager {
 		table.close();
 	}
 	
-	public static void scanData(Configuration config) throws IOException {
+	/**
+	 * 查询遍历输出所有数据
+	 * @param config
+	 * @throws IOException
+	 */
+	public static void scanAllRows(Configuration config) throws IOException {
 		Connection connection = ConnectionFactory.createConnection(config);
 		TableName tablename = TableName.valueOf("member");
 		Table table = connection.getTable(tablename);
+		
+		// 遍历所有
 		Scan scan = new Scan(); 
 		ResultScanner resultScaner = table.getScanner(scan);
-		
-//		for (Result result : resultScaner) {  
-////	        String str = Bytes.toString(result.getValue(Bytes.toBytes("debugo")));  
-//	        System.out.println(result);  
-//	    }
-		
-		for (Result result : resultScaner) { 
-			for (KeyValue kv : result.list()) {
-				System.out.println("row:" + Bytes.toString(kv.getRow()));
-	            System.out.println("family:" + Bytes.toString(kv.getFamily()));
-	            System.out.println("qualifier:" + Bytes.toString(kv.getQualifier()));
-	            System.out.println("value:" + Bytes.toString(kv.getValue()));
-	            System.out.println("timestamp:" + kv.getTimestamp());
-	            System.out.println("-------------------------------------------");
+		for (Result result : resultScaner) {
+			for (Cell cell : result.listCells()) {
+				System.out.println("row:      " +Bytes.toString(CellUtil.cloneRow(cell)));
+				System.out.println("family:   " +Bytes.toString(CellUtil.cloneFamily(cell)));
+				System.out.println("qualifier:" +Bytes.toString(CellUtil.cloneQualifier(cell)));
+				System.out.println("value:    " +Bytes.toString(CellUtil.cloneValue(cell)));
+				System.out.println("timestamp:" +cell.getTimestamp());
+				System.out.println("-------------------------------------------");
 			}
-			
-	    }  
+	    }
+		
+		// 只遍历Row-key为"debugo"的内容
+		Get get = new Get(Bytes.toBytes("debugo"));
+		Result result = table.get(get);
+		for (Cell cell : result.listCells()) {
+			System.out.println("row:      " +Bytes.toString(CellUtil.cloneRow(cell)));
+			System.out.println("family:   " +Bytes.toString(CellUtil.cloneFamily(cell)));
+			System.out.println("qualifier:" +Bytes.toString(CellUtil.cloneQualifier(cell)));
+			System.out.println("value:    " +Bytes.toString(CellUtil.cloneValue(cell)));
+			System.out.println("timestamp:" +cell.getTimestamp());
+			System.out.println("-------------------------------------------");
+		}
+		
+		table.close();
+	}
+	
+	/**
+	 * 查询单行数据
+	 * @param config
+	 * @throws IOException
+	 */
+	public static void getRowData(Configuration config) throws IOException {
+		Connection connection = ConnectionFactory.createConnection(config);
+		TableName tablename = TableName.valueOf("member");
+		Table table = connection.getTable(tablename);
+		// 根据row-key/family/qualifier三者查询值
+		Get get = new Get(Bytes.toBytes("debugo"));
+		Result result = table.get(get);
+		String str = Bytes.toString(result.getValue(Bytes.toBytes("info"), Bytes.toBytes("age")));
+		System.out.println(str);
+		table.close();
 	}
 
 	  public static void main(String... args) throws IOException {
@@ -198,7 +211,8 @@ public class TableManager {
 //	        config.addResource(new Path("E:\\workplaceidea\\mvnstudy\\conf\\core-site.xml"));
 	    
 	    Configuration config = HbaseConfig.getHHConfig();
-//	    createSchemaTables(config);
+	    // 创建表
+	    createSchemaTables(config);
 //	    modifySchema(config);
 	    
 //	    scanSchema(config);
@@ -208,9 +222,11 @@ public class TableManager {
 //	    putData(config); // 增加数据
 
 //	    deleteData(config); // 删除数据
-//	    getData(config); // 获取数据
+	    // 批量删除
 	    
-	    scanData(config);
+//	    getRowData(config); // 获取数据
+	    
+//	    scanAllRows(config);
 	  }
 	
 	

@@ -2,14 +2,10 @@ package com.tony.spark;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Duration;
@@ -17,6 +13,8 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
+
+import com.tony.kafka.producer.KafkaProducer;
 
 import kafka.serializer.StringDecoder;
 import scala.Tuple2;
@@ -53,13 +51,13 @@ public class KafkaToSparkStreaming {
 	        Map<String, String> kafkaParams = new HashMap<String, String>();
 //	        kafkaParams.put("zookeeper.connect", "localhost:2181"); //Make all kafka data for this cluster appear under a particular path. 
 	        kafkaParams.put("zookeeper.connect", "192.168.81.87:2181"); //Make all kafka data for this cluster appear under a particular path. 
-	        kafkaParams.put("group.id", "linlin-group");   //String that uniquely identifies the group of consumer processes to which this consumer belongs
-//	        kafkaParams.put("metadata.broker.list", "192.168.81.87:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
-	        kafkaParams.put("metadata.broker.list", "localhost:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
+	        kafkaParams.put("group.id", KafkaProducer.TOPIC_GROUP_ID);   //String that uniquely identifies the group of consumer processes to which this consumer belongs
+//	        kafkaParams.put("metadata.broker.list", "localhost:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
+	        kafkaParams.put("metadata.broker.list", "192.168.81.87:9092"); //Producer can find a one or more Brokers to determine the Leader for each topic.
 	        kafkaParams.put("serializer.class", "kafka.serializer.StringEncoder"); //Serializer to use when preparing the message for transmission to the Broker.
 	        kafkaParams.put("request.required.acks", "1");  //Producer to require an acknowledgement from the Broker that the message was received.
 
-	        Set<String> topics = Collections.singleton("linlin");
+	        Set<String> topics = Collections.singleton(KafkaProducer.TOPIC_NAME);
 
 	        //Create an input DStream for Receiving data from socket
 	        JavaPairInputDStream<String, String> directKafkaStream = KafkaUtils.createDirectStream(ssc,

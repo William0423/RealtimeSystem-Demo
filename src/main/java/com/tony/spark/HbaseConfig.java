@@ -1,9 +1,15 @@
 package com.tony.spark;
 
 import java.io.InputStream;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 public class HbaseConfig {
 //    private static final Logger LOG = LoggerFactory.getLogger(HbaseConfig.class);
@@ -17,7 +23,7 @@ public class HbaseConfig {
             //for debug purpose
 //            LOG.debug("configuration files not found locally");
         } finally {
-//            IOUtils.closeQuietly(confResourceAsInputStream);
+            IOUtils.closeQuietly(confResourceAsInputStream);
         }
         if (available == 0 ) {
             conf = new Configuration();
@@ -27,4 +33,23 @@ public class HbaseConfig {
         }
         return conf;
     }
+    
+    public static void main(String[] args) {
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+        String time = "1513248600000";
+        String d = sdf.format(new Date(Long.parseLong(String.valueOf(time))));
+        
+        JSONObject json_data = new JSONObject();
+        // parse raw data into a JSON object
+        try {
+			json_data.put("rowKey-em", "GE1/0/11");
+	        json_data.put("family-datetime", d);
+	        json_data.put("qualifier", "influx");
+	        json_data.put("value", 38678);
+	        json_data.put("Timestamp", 1513248600);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+        System.out.println(json_data.toString());
+	}
 }

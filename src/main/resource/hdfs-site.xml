@@ -21,14 +21,22 @@
              <name>dfs.replication</name>
              <value>1</value>
         </property>
-        <property>
+        
+<!--         <property>
              <name>dfs.namenode.name.dir</name>
              <value>file:/usr/local/hadoop/tmp/dfs/name</value>
-             <!-- <value>file:/home/ning/tangning/bigdata/hadoop-2.9.0/tmpdatafile/dfs/name</value> -->
         </property>
         <property>
              <name>dfs.datanode.data.dir</name>
              <value>file:/usr/local/hadoop/tmp/dfs/data</value>
-             <!-- <value>file:/home/ning/tangning/bigdata/hadoop-2.9.0/tmpdatafile/dfs/data</value> -->
+        </property> -->
+        
+        <property>
+             <name>dfs.namenode.name.dir</name>
+             <value>file:/home/ning/tangning/bigdata/hadoop-2.9.0/tmpdatafile/dfs/name</value>
+        </property>
+        <property>
+             <name>dfs.datanode.data.dir</name>
+             <value>file:/home/ning/tangning/bigdata/hadoop-2.9.0/tmpdatafile/dfs/data</value>
         </property>
 </configuration>
