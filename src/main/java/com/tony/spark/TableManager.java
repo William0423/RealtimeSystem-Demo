@@ -1,6 +1,8 @@
 package com.tony.spark;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
@@ -21,12 +23,14 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.io.compress.Compression.Algorithm;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 public class TableManager {
 	  // 表名
 	  private static final String TABLE_NAME = "bd_table";
-	  // cf名
-	  private static final String CF_DEFAULT = "portid";
+	  // 列，存储带宽值
+	  private static final String CF_DEFAULT = "bd";
 
 	  public static void createSchemaTables(Configuration config) throws IOException {
 		    try (Connection connection = ConnectionFactory.createConnection(config);
@@ -135,6 +139,47 @@ public class TableManager {
 		  table.close();
 	  }
 	  
+		public static void putBdData(Configuration config) throws IOException {
+			
+	        SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMMddHHmmss");
+	        String time = "1513248600000";
+	        String t = sdf.format(new Date(Long.parseLong(String.valueOf(time))));
+	        
+			
+			  // 获得连接：
+			Connection connection = ConnectionFactory.createConnection(config);
+			TableName tablename = TableName.valueOf(TABLE_NAME);
+			Table table = connection.getTable(tablename); // 表数据层面的table对象
+			int i = 0;
+			while (i < 100) {
+				byte[] rowkey = Bytes.toBytes(t+"GE1/0/11" + i); // port名字长度可能不同
+				Put put = new Put(rowkey);
+				put.addColumn(Bytes.toBytes("bd"), Bytes.toBytes("in"), Bytes.toBytes((i+100+0.21)+""));
+				put.addColumn(Bytes.toBytes("bd"), Bytes.toBytes("out"), Bytes.toBytes((i+100+0.55)+""));
+				table.put(put);
+				i++;
+			}
+			table.close();
+		
+//	        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+//	        SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMMddHHmmss");
+//	        String time = "1513248600000";
+//	        String t = sdf.format(new Date(Long.parseLong(String.valueOf(time))));
+	        
+//	        JSONObject json_data = new JSONObject();
+//	        // parse raw data into a JSON object
+//	        try {
+//				json_data.put("rowKey-em", "GE1/0/11");
+//		        json_data.put("family-datetime", d);
+//		        json_data.put("qualifier", "influx");
+//		        json_data.put("value", 38678);
+//		        json_data.put("Timestamp", 1513248600);
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//	        System.out.println(json_data.toString());
+		}
+	  
 	public static void deleteData(Configuration config) throws IOException {
 		Connection connection = ConnectionFactory.createConnection(config);
 		TableName tablename = TableName.valueOf("member");
@@ -200,7 +245,7 @@ public class TableManager {
 		System.out.println(str);
 		table.close();
 	}
-
+	
 	  public static void main(String... args) throws IOException {
 //	    Configuration config = HBaseConfiguration.create();
 //	    //Add any necessary configuration files (hbase-site.xml, core-site.xml)
@@ -212,7 +257,7 @@ public class TableManager {
 	    
 	    Configuration config = HbaseConfig.getHHConfig();
 	    // 创建表
-	    createSchemaTables(config);
+//	    createSchemaTables(config);
 //	    modifySchema(config);
 	    
 //	    scanSchema(config);
@@ -221,6 +266,8 @@ public class TableManager {
 	    // 对数据的操作：
 //	    putData(config); // 增加数据
 
+	    putBdData(config); 	
+	    
 //	    deleteData(config); // 删除数据
 	    // 批量删除
 	    

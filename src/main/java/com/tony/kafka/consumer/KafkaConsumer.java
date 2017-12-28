@@ -20,11 +20,11 @@ public class KafkaConsumer {
 	private KafkaConsumer() {
 		Properties props = new Properties();
 		// zookeeper 配置
-		props.put("zookeeper.connect", "127.0.0.1:2181");
-//		props.put("zookeeper.connect", "192.168.81.87:2181");
+//		props.put("zookeeper.connect", "127.0.0.1:2181");
+		props.put("zookeeper.connect", "192.168.81.87:2181");
 
 		// group 代表一个消费组
-		props.put("group.id", "linlin-group");
+		props.put("group.id", KafkaProducer.TOPIC_GROUP_ID);
 
 		// zk连接超时
 		props.put("zookeeper.session.timeout.ms", "1000");
@@ -45,13 +45,13 @@ public class KafkaConsumer {
 
 	void consume() {
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-		topicCountMap.put(KafkaProducer.TOPIC, new Integer(1));
+		topicCountMap.put(KafkaProducer.TOPIC_NAME, new Integer(1));
 
 		StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
 		StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
 
 		Map<String, List<KafkaStream<String, String>>> consumerMap = consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
-		KafkaStream<String, String> stream = consumerMap.get(KafkaProducer.TOPIC).get(0);
+		KafkaStream<String, String> stream = consumerMap.get(KafkaProducer.TOPIC_NAME).get(0);
 		ConsumerIterator<String, String> it = stream.iterator();
 		while (it.hasNext())
 			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + it.next().message() + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
