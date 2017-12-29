@@ -21,10 +21,9 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.filter.RowFilter;
 import org.apache.hadoop.hbase.io.compress.Compression.Algorithm;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 public class TableManager {
 	  // 表名
@@ -151,8 +150,8 @@ public class TableManager {
 			TableName tablename = TableName.valueOf(TABLE_NAME);
 			Table table = connection.getTable(tablename); // 表数据层面的table对象
 			int i = 0;
-			while (i < 100) {
-				byte[] rowkey = Bytes.toBytes(t+"GE1/0/11" + i); // port名字长度可能不同
+			while (i < 10) {
+				byte[] rowkey = Bytes.toBytes(t+"GA1/0/11" + i); // port名字长度可能不同
 				Put put = new Put(rowkey);
 				put.addColumn(Bytes.toBytes("bd"), Bytes.toBytes("in"), Bytes.toBytes((i+100+0.21)+""));
 				put.addColumn(Bytes.toBytes("bd"), Bytes.toBytes("out"), Bytes.toBytes((i+100+0.55)+""));
@@ -197,12 +196,16 @@ public class TableManager {
 	 */
 	public static void scanAllRows(Configuration config) throws IOException {
 		Connection connection = ConnectionFactory.createConnection(config);
-		TableName tablename = TableName.valueOf("member");
+		TableName tablename = TableName.valueOf(TABLE_NAME);
 		Table table = connection.getTable(tablename);
 		
 		// 遍历所有
 		Scan scan = new Scan(); 
+		scan.setStartRow(Bytes.toBytes("20171214185000GE1/0/1191")); // 如果有起始的row-key，不设置endRow，那么默认的endRow到最后一行
+		scan.setStopRow(Bytes.toBytes("20171214185000GE1/0/1195"));
+		scan.addColumn(Bytes.toBytes("bd"), Bytes.toBytes("in"));
 		ResultScanner resultScaner = table.getScanner(scan);
+//		System.out.println(resultScaner.);
 		for (Result result : resultScaner) {
 			for (Cell cell : result.listCells()) {
 				System.out.println("row:      " +Bytes.toString(CellUtil.cloneRow(cell)));
@@ -214,17 +217,20 @@ public class TableManager {
 			}
 	    }
 		
+//		Filter filter = new RowFilter(rowCompareOp, rowComparator)
+//		scan.setStartRow(Bytes.toBytes("20171214185000GE1/0/1191"));
+		
 		// 只遍历Row-key为"debugo"的内容
-		Get get = new Get(Bytes.toBytes("debugo"));
-		Result result = table.get(get);
-		for (Cell cell : result.listCells()) {
-			System.out.println("row:      " +Bytes.toString(CellUtil.cloneRow(cell)));
-			System.out.println("family:   " +Bytes.toString(CellUtil.cloneFamily(cell)));
-			System.out.println("qualifier:" +Bytes.toString(CellUtil.cloneQualifier(cell)));
-			System.out.println("value:    " +Bytes.toString(CellUtil.cloneValue(cell)));
-			System.out.println("timestamp:" +cell.getTimestamp());
-			System.out.println("-------------------------------------------");
-		}
+//		Get get = new Get(Bytes.toBytes("20171214185000GE1/0/1191"));
+//		Result result = table.get(get);
+//		for (Cell cell : result.listCells()) {
+//			System.out.println("row:      " +Bytes.toString(CellUtil.cloneRow(cell)));
+//			System.out.println("family:   " +Bytes.toString(CellUtil.cloneFamily(cell)));
+//			System.out.println("qualifier:" +Bytes.toString(CellUtil.cloneQualifier(cell)));
+//			System.out.println("value:    " +Bytes.toString(CellUtil.cloneValue(cell)));
+//			System.out.println("timestamp:" +cell.getTimestamp());
+//			System.out.println("-------------------------------------------");
+//		}
 		
 		table.close();
 	}
@@ -236,13 +242,15 @@ public class TableManager {
 	 */
 	public static void getRowData(Configuration config) throws IOException {
 		Connection connection = ConnectionFactory.createConnection(config);
-		TableName tablename = TableName.valueOf("member");
+		TableName tablename = TableName.valueOf(TABLE_NAME);
 		Table table = connection.getTable(tablename);
 		// 根据row-key/family/qualifier三者查询值
-		Get get = new Get(Bytes.toBytes("debugo"));
+		Get get = new Get(Bytes.toBytes("20171214185000GE1/0/1191"));
 		Result result = table.get(get);
-		String str = Bytes.toString(result.getValue(Bytes.toBytes("info"), Bytes.toBytes("age")));
-		System.out.println(str);
+		String in = Bytes.toString(result.getValue(Bytes.toBytes("bd"), Bytes.toBytes("in")));
+		System.out.println(in);
+		String out = Bytes.toString(result.getValue(Bytes.toBytes("bd"), Bytes.toBytes("out")));
+		System.out.println(out);
 		table.close();
 	}
 	
@@ -267,12 +275,13 @@ public class TableManager {
 //	    putData(config); // 增加数据
 
 	    putBdData(config); 	
-	    
-//	    deleteData(config); // 删除数据
+	 // 删除数据
+//	    deleteData(config); 
 	    // 批量删除
 	    
-//	    getRowData(config); // 获取数据
-	    
+	 // 获取单条数据
+//	    getRowData(config); 
+	    // 批量获取数据
 //	    scanAllRows(config);
 	  }
 	
