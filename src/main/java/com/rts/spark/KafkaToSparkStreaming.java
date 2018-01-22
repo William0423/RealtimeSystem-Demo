@@ -1,4 +1,4 @@
-package com.tony.spark;
+package com.rts.spark;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 
-import com.tony.kafka.producer.KafkaProducer;
+import com.rts.kafka.producer.KafkaProducer;
 
 import kafka.serializer.StringDecoder;
 import scala.Tuple2;

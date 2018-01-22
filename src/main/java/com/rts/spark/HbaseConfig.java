@@ -1,8 +1,7 @@
-package com.tony.spark;
+package com.rts.spark;
 
 import java.io.InputStream;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.IOUtils;
