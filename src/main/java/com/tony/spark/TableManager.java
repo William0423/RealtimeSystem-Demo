@@ -39,8 +39,7 @@ public class TableManager {
 		      HColumnDescriptor hcd = new HColumnDescriptor(CF_DEFAULT);
 		      hcd.setCompressionType(Algorithm.NONE);
 		      table.addFamily(hcd);
-		      
-		      
+
 		      System.out.print("Creating table. ");
 		      createOrOverwrite(admin, table);
 		      System.out.println(" Done.");
@@ -274,7 +273,7 @@ public class TableManager {
 	    // 对数据的操作：
 //	    putData(config); // 增加数据
 
-	    putBdData(config); 	
+//	    putBdData(config); 	
 	 // 删除数据
 //	    deleteData(config); 
 	    // 批量删除
@@ -282,7 +281,7 @@ public class TableManager {
 	 // 获取单条数据
 //	    getRowData(config); 
 	    // 批量获取数据
-//	    scanAllRows(config);
+	    scanAllRows(config);
 	  }
 	
 	

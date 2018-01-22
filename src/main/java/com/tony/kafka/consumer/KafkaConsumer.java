@@ -14,32 +14,29 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 import kafka.utils.VerifiableProperties;
 
+/**
+ * kafka消息消费者
+ */
 public class KafkaConsumer {
 	private final ConsumerConnector consumer;
 
 	private KafkaConsumer() {
 		Properties props = new Properties();
 		// zookeeper 配置
-//		props.put("zookeeper.connect", "127.0.0.1:2181");
 		props.put("zookeeper.connect", "192.168.81.87:2181");
-
 		// group 代表一个消费组
 		props.put("group.id", KafkaProducer.TOPIC_GROUP_ID);
-
 		// zk连接超时
 		props.put("zookeeper.session.timeout.ms", "1000");
 		props.put("zookeeper.sync.time.ms", "200");
 		props.put("rebalance.max.retries", "5");
 		props.put("rebalance.backoff.ms", "1200");
-		
-	
 		props.put("auto.commit.interval.ms", "1000");
 		props.put("auto.offset.reset", "smallest");
 		// 序列化类
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 
 		ConsumerConfig config = new ConsumerConfig(props);
-
 		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(config);
 	}
 
