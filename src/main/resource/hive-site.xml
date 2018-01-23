@@ -72,12 +72,12 @@
   </property>
   <property>
     <name>hive.exec.local.scratchdir</name>
-    <value>${system:java.io.tmpdir}/${system:user.name}</value>
+    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/user</value>
     <description>Local scratch space for Hive jobs</description>
   </property>
   <property>
     <name>hive.downloaded.resources.dir</name>
-    <value>${system:java.io.tmpdir}/${hive.session.id}_resources</value>
+    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/session_resources</value>
     <description>Temporary local directory for added resources in the remote file system.</description>
   </property>
   <property>
@@ -363,12 +363,12 @@
   </property>
   <property>
     <name>hive.metastore.warehouse.dir</name>
-    <value>/user/hive/warehouse</value>
+    <value>hdfs://ning-VirtualBox:9000/user/hive/warehouse</value>
     <description>location of default database for the warehouse</description>
   </property>
   <property>
     <name>hive.metastore.uris</name>
-    <value/>
+    <value>thrift://ning-VirtualBox:9083</value>
     <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
   </property>
   <property>
@@ -738,12 +738,12 @@
   </property>
   <property>
     <name>datanucleus.schema.autoCreateAll</name>
-    <value>false</value>
+    <value>true</value>
     <description>Auto creates necessary schema on a startup if one doesn't exist. Set this to false, after creating it once.To enable auto create also set hive.metastore.schema.verification=false. Auto creation is not recommended for production use cases, run schematool command instead.</description>
   </property>
   <property>
     <name>hive.metastore.schema.verification</name>
-    <value>true</value>
+    <value>false</value>
     <description>
       Enforce metastore schema version consistency.
       True: Verify that version information stored in is compatible with one from Hive jars.  Also disable automatic
@@ -1682,7 +1682,7 @@
   </property>
   <property>
     <name>hive.querylog.location</name>
-    <value>${system:java.io.tmpdir}/${system:user.name}</value>
+    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/user</value>
     <description>Location of Hive run time structured log file</description>
   </property>
   <property>
@@ -3973,7 +3973,7 @@
   </property>
   <property>
     <name>hive.server2.logging.operation.log.location</name>
-    <value>${system:java.io.tmpdir}/${system:user.name}/operation_logs</value>
+    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/user/operation_logs</value>
     <description>Top level directory where operation logs are stored if logging functionality is enabled</description>
   </property>
   <property>
@@ -5956,4 +5956,35 @@
       See HIVE-15121 for details.
     </description>
   </property>
+
+
+	<!-- database connection -->
+	<property>
+		<name>javax.jdo.option.ConnectionURL</name>
+		<value>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true</value>
+		<description>JDBC connect string for a JDBC metastore</description>    
+	</property>   
+	<property> 
+		<name>javax.jdo.option.ConnectionDriverName</name> 
+		<value>com.mysql.jdbc.Driver</value> 
+		<description>Driver class name for a JDBC metastore</description>     
+	</property>               
+
+	<property> 
+		<name>javax.jdo.option.ConnectionUserName</name>
+		<!-- hive数据库的操作权限 用户名和密码 -->
+		<value>hive</value>
+		<description>username to use against metastore database</description>
+	</property>
+	<property>  
+		<name>javax.jdo.option.ConnectionPassword</name>
+		<value>hive</value>
+		<description>password to use against metastore database</description>  
+	</property>
+
+
+
+
+
+
 </configuration>
