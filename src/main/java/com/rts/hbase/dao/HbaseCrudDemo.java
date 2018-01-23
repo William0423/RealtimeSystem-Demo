@@ -1,9 +1,10 @@
-package com.rts.spark;
+package com.rts.hbase.dao;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
+import com.rts.hbase.utils.HbaseConnectionUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
@@ -24,7 +25,10 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.io.compress.Compression.Algorithm;
 import org.apache.hadoop.hbase.util.Bytes;
 
-public class TableManager {
+/**
+ * Hbase的CRUD样例，使用了0.96版本以后的新接口；
+ */
+public class HbaseCrudDemo {
 	  // 表名
 	  private static final String TABLE_NAME = "bd_table";
 	  // 列，存储带宽值
@@ -65,7 +69,6 @@ public class TableManager {
 	    }
 	    
 	  }
-	 
 	  
 	  public static void scanSchema(Configuration config) throws IOException {
 		  Connection connection = ConnectionFactory.createConnection(config);
@@ -199,8 +202,8 @@ public class TableManager {
 		
 		// 遍历所有
 		Scan scan = new Scan(); 
-		scan.setStartRow(Bytes.toBytes("20171214185000GE1/0/1191")); // 如果有起始的row-key，不设置endRow，那么默认的endRow到最后一行
-		scan.setStopRow(Bytes.toBytes("20171214185000GE1/0/1195"));
+		scan.setStartRow(Bytes.toBytes("201712141850001191")); // 如果有起始的row-key，不设置endRow，那么默认的endRow到最后一行
+		scan.setStopRow(Bytes.toBytes("201712141850001195"));
 		scan.addColumn(Bytes.toBytes("bd"), Bytes.toBytes("in"));
 		ResultScanner resultScaner = table.getScanner(scan);
 //		System.out.println(resultScaner.);
@@ -243,7 +246,7 @@ public class TableManager {
 		TableName tablename = TableName.valueOf(TABLE_NAME);
 		Table table = connection.getTable(tablename);
 		// 根据row-key/family/qualifier三者查询值
-		Get get = new Get(Bytes.toBytes("20171214185000GE1/0/1191"));
+		Get get = new Get(Bytes.toBytes("201712141850001191"));
 		Result result = table.get(get);
 		String in = Bytes.toString(result.getValue(Bytes.toBytes("bd"), Bytes.toBytes("in")));
 		System.out.println(in);
@@ -261,24 +264,19 @@ public class TableManager {
 //	        config.addResource(new Path("E:\\workplaceidea\\mvnstudy\\conf\\hbase-site.xml"));
 //	        config.addResource(new Path("E:\\workplaceidea\\mvnstudy\\conf\\core-site.xml"));
 	    
-	    Configuration config = HbaseConfig.getHHConfig();
+	    Configuration config = HbaseConnectionUtils.getHHConfig();
 	    // 创建表
 //	    createSchemaTables(config);
 //	    modifySchema(config);
-	    
 //	    scanSchema(config);
-	    
-	    
-	    // 对数据的操作：
-//	    putData(config); // 增加数据
-
-//	    putBdData(config); 	
-	 // 删除数据
-//	    deleteData(config); 
-	    // 批量删除
-	    
-	 // 获取单条数据
-//	    getRowData(config); 
+// 		对数据的操作：
+        // 增加数据
+	    putData(config);
+	    putBdData(config);
+	    // 删除数据
+	    deleteData(config);
+		// 获取单条数据
+	    getRowData(config);
 	    // 批量获取数据
 	    scanAllRows(config);
 	  }

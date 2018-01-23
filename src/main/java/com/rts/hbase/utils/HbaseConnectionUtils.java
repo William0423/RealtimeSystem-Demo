@@ -1,4 +1,4 @@
-package com.rts.spark;
+package com.rts.hbase.utils;
 
 import java.io.InputStream;
 import java.sql.Date;
@@ -10,8 +10,11 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class HbaseConfig {
-//    private static final Logger LOG = LoggerFactory.getLogger(HbaseConfig.class);
+/**
+ * 从Hbase的配置文件hbase-site.xml读取连接hbase的信息，生成hbase的Configuration对象实例
+ */
+public class HbaseConnectionUtils {
+//    private static final Logger LOG = LoggerFactory.getLogger(HbaseConnectionUtils.class);
     public static org.apache.hadoop.conf.Configuration getHHConfig() {
         Configuration conf = HBaseConfiguration.create();
         InputStream confResourceAsInputStream = conf.getConfResourceAsInputStream("hbase-site.xml");
@@ -34,21 +37,5 @@ public class HbaseConfig {
     }
     
     public static void main(String[] args) {
-        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
-        String time = "1513248600000";
-        String d = sdf.format(new Date(Long.parseLong(String.valueOf(time))));
-        
-        JSONObject json_data = new JSONObject();
-        // parse raw data into a JSON object
-        try {
-			json_data.put("rowKey-em", "GE1/0/11");
-	        json_data.put("family-datetime", d);
-	        json_data.put("qualifier", "influx");
-	        json_data.put("value", 38678);
-	        json_data.put("Timestamp", 1513248600);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-        System.out.println(json_data.toString());
 	}
 }

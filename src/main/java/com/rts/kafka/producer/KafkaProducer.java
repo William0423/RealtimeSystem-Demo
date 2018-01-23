@@ -10,7 +10,7 @@ import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 
 /**
- * kafka消息生产者
+ * kafka消息生产者：生成数据到指定的kafka的topic
  */
 public class KafkaProducer {
 	private final Producer<String, String> producer;

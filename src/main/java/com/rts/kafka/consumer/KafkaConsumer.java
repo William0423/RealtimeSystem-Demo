@@ -15,7 +15,7 @@ import kafka.serializer.StringDecoder;
 import kafka.utils.VerifiableProperties;
 
 /**
- * kafka消息消费者
+ * kafka消息消费者，消费kafka指定topic的数据
  */
 public class KafkaConsumer {
 	private final ConsumerConnector consumer;
