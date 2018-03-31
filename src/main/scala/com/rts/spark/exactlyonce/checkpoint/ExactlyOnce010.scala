@@ -1,4 +1,4 @@
-package com.rts.spark.checkpoint
+package com.rts.spark.exactlyonce.checkpoint
 
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.StringDeserializer

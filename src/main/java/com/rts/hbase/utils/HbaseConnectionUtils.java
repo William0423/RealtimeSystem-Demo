@@ -1,14 +1,11 @@
 package com.rts.hbase.utils;
 
 import java.io.InputStream;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+
 
 /**
  * 从Hbase的配置文件hbase-site.xml读取连接hbase的信息，生成hbase的Configuration对象实例

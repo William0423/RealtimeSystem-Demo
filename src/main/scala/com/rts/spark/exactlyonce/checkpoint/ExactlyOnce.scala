@@ -1,4 +1,4 @@
-package com.rts.spark.checkpoint
+package com.rts.spark.exactlyonce.checkpoint
 
 import java.text.SimpleDateFormat
 
@@ -44,14 +44,14 @@ object ExactlyOnce {
     /*旧版本*/
     val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topics)
     val lines = messages.map(_._2).flatMap(_.split("\n"))
-    lines.foreachRDD(rdd => (
+    lines.foreachRDD(rdd =>
       //      val offsets = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
       for (line <- rdd.collect().toArray){
         println("############")
         println(line)
 
       }
-      ))
+      )
     // the offset ranges for the stream will be stored in the checkpoint
     ssc.checkpoint(checkpointDir)
     //设置通过间隔时间，定时持久checkpoint到hdfs上：官网推荐————刷新间隔一般为批处理间隔的5到10倍是比较好的一个方式
