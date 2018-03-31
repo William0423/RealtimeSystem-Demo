@@ -72,12 +72,12 @@
   </property>
   <property>
     <name>hive.exec.local.scratchdir</name>
-    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/user</value>
+    <value>/home/hadoop/personal/bigdata/hive/tmp_datafile/username</value>
     <description>Local scratch space for Hive jobs</description>
   </property>
   <property>
     <name>hive.downloaded.resources.dir</name>
-    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/session_resources</value>
+    <value>/home/hadoop/personal/bigdata/hive/tmp_datafile/sessionresource</value>
     <description>Temporary local directory for added resources in the remote file system.</description>
   </property>
   <property>
@@ -363,12 +363,12 @@
   </property>
   <property>
     <name>hive.metastore.warehouse.dir</name>
-    <value>hdfs://ning-VirtualBox:9000/user/hive/warehouse</value>
+    <value>hdfs://localhost:9000/user/hive/warehouse</value>
     <description>location of default database for the warehouse</description>
   </property>
   <property>
     <name>hive.metastore.uris</name>
-    <value>thrift://ning-VirtualBox:9083</value>
+    <value>thrift://localhost:9083</value>
     <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
   </property>
   <property>
@@ -1682,7 +1682,7 @@
   </property>
   <property>
     <name>hive.querylog.location</name>
-    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/user</value>
+    <value>/home/hadoop/personal/bigdata/hive/tmp_datafile/username</value>
     <description>Location of Hive run time structured log file</description>
   </property>
   <property>
@@ -3973,7 +3973,7 @@
   </property>
   <property>
     <name>hive.server2.logging.operation.log.location</name>
-    <value>/home/ning/tangning/bigdata/hive-2.3.2-bin/tmp_datafile/user/operation_logs</value>
+    <value>/home/hadoop/personal/bigdata/hive/tmp_datafile/username/operationlogs</value>
     <description>Top level directory where operation logs are stored if logging functionality is enabled</description>
   </property>
   <property>

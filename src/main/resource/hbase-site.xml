@@ -39,15 +39,15 @@
 
   <property>
     <name>hbase.rootdir</name>
-    <value>hdfs://192.168.81.70:9000/hbase</value>
+    <value>hdfs://localhost:9000/hbase</value>
   </property>
   <property>
     <name>hbase.zookeeper.property.dataDir</name>
-   	<value>/home/ning/tangning/bigdata/hbase-1.2.6/datafile/zookeeper</value>
+    <value>/home/hadoop/personal/bigdata/hbase-1.2.6/datafile/zookeeper</value>
   </property>
   <property>
   	<name>hbase.zookeeper.quorum</name>
-  	<value>192.168.81.70:2181</value>
+  	<value>localhost:2181</value>
   </property>
   <!-- 需要配置zookeeper -->
   
