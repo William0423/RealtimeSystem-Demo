@@ -9,6 +9,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.SparkConf
 import com.typesafe.config.ConfigFactory
+import org.apache.spark.streaming.kafka.{HasOffsetRanges, OffsetRange}
 
 
 object RealtimeSystemDemoApp extends LazyLogging {
@@ -48,6 +49,8 @@ object RealtimeSystemDemoApp extends LazyLogging {
 
     for (topic <- topicsSet) {
       val messagesDStream = CustomDirectKafkaStreamUtil.kafkaStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, zkOffsetsDAOImpl, topic)
+
+      //
       val xmlDataRDD = messagesDStream.map(_._2).flatMap(_.split("\n"))
       xmlDataRDD.foreachRDD { rdd =>
         for (line <- rdd.collect().toArray) {
@@ -55,6 +58,19 @@ object RealtimeSystemDemoApp extends LazyLogging {
           println(line)
         }
       } // 遍历RDD结束
+
+      // by transform
+      var offsetRanges = Array.empty[OffsetRange]
+      val result = messagesDStream.transform { rdd =>
+        offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
+        rdd
+      }.flatMap(
+        tuple=>  Seq((1,tuple._2))
+      ).foreachRDD(rdd=>
+        rdd.collect().foreach(println)
+      )
+      println(">>>>>>>>>>>>>>")
+      offsetRanges.foreach(println)
 
       // 已经保存到数据库的kafka偏移量offsets，存到zk中
       messagesDStream.foreachRDD(rdd => zkOffsetsDAOImpl.saveOffsets(topic, rdd))
